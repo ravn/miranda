@@ -9,7 +9,8 @@ MAN=usr/share/man/man1
 #LIB=usr/local/lib#beware no spaces after LIB
 #MAN=usr/local/man/man1
 CC = gcc -w
-CFLAGS = #-O #-DCYGWIN #-DUWIN #-DIBMRISC #-Dsparc7 #-Dsparc8
+# Compile on Ubuntu - https://stackoverflow.com/a/69908511/53897
+CFLAGS = -fcommon #-O #-DCYGWIN #-DUWIN #-DIBMRISC #-Dsparc7 #-Dsparc8
 #be wary of using anything higher than -O as the garbage collector may fall over
 #if using gcc rather than clang try without -O first
 EX = #.exe        #needed for CYGWIN, UWIN
@@ -24,9 +25,10 @@ mira: big.o cmbnms.o data.o lex.o reduce.o steer.o trans.o types.o y.tab.o \
 	    big.o reduce.o steer.o trans.o types.o -lm -o mira
 	strip mira$(EX)
 .host:
-	@echo compiled: `date` > .host
+	@echo '"compiled:' `date` > .host
 	@echo $(CC) $(CFLAGS) >> .host
 	$(CC) -v 2>> .host
+	@echo '"' >> .host
 	sed -i 's/.*/&\\\\n/' .host
 	sed -i 's/\\n /\\n/g' .host
 y.tab.c y.tab.h: rules.y
